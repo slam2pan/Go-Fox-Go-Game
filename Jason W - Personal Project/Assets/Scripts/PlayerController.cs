@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody playerRb;
     public Button gameOverButton;
+    [SerializeField] GameObject powerupIndicator;
     [SerializeField] AudioClip jumpSound;
     [SerializeField] AudioClip crashSound;
     private AudioSource playerAudio;
@@ -92,20 +93,29 @@ public class PlayerController : MonoBehaviour
             isOnGround = true;
         }
 
+        // If player has powerup, destroy the object instead
         if (collision.gameObject.CompareTag("Object"))
         {
-            playerAudio.PlayOneShot(crashSound);
-            gameOver = true;
-            gameOverButton.gameObject.SetActive(true);
+            if (hasPowerup == false)
+            {
+                playerAudio.PlayOneShot(crashSound);
+                gameOver = true;
+                gameOverButton.gameObject.SetActive(true);
+            } else
+            {
+                Destroy(collision.gameObject);
+            }
         }
     }
 
+    // Give the player the powerup
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Powerup"))
         {
             Destroy(other.gameObject);
             hasPowerup = true;
+            powerupIndicator.SetActive(true);
             StartCoroutine(PowerupCountdownRoutine());
         }
     }
@@ -114,6 +124,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(7);
         hasPowerup = false;
+        powerupIndicator.SetActive(false);
     }
 
 }

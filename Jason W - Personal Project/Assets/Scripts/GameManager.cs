@@ -10,14 +10,14 @@ public class GameManager : MonoBehaviour
     public GameObject[] objects;
     public GameObject powerup;
     private PlayerController playerControllerScript;
-    private MoveTowardsPlayer moveScript;
+    private MoveTowardsPlayer moveTowards;
     public GameObject titleScreen;
     public TextMeshProUGUI scoreText;
 
     private float spawnRange = 5;
-    public float spawnRateObject = 1;
-    public float spawnRatePowerup = 10;
-    public float zStart = 30;
+    private float spawnRateObject = 1;
+    private float spawnRatePowerup = 8;
+    private float zStart = 30;
     private int score = 0;
     private int scoreInc = 1;
     private bool hasGameStarted = false;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         titleScreen.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(true);
         playerControllerScript = GameObject.Find("Player").GetComponentInChildren<PlayerController>();
-        moveScript = GameObject.FindGameObjectWithTag("Object").GetComponent<MoveTowardsPlayer>();
+        moveTowards = GameObject.Find("Ground").GetComponent<MoveTowardsPlayer>();
         StartCoroutine(SpawnObjects());
         StartCoroutine(SpawnPowerup());
         StartCoroutine(KeepScore());
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnRateObject);
 
+            spawnRateObject = 8 / moveTowards.getSpeed();
             int index = Random.Range(0, objects.Length);
             Vector3 spawnLocation = new Vector3(Random.Range(-spawnRange, spawnRange), objects[index].transform.position.y, zStart);
             Instantiate(objects[index], spawnLocation, objects[index].transform.rotation);
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(spawnRatePowerup);
 
             // Randomize spawn location
+            spawnRatePowerup = 64 / moveTowards.getSpeed();
             Vector3 spawnSpot = new Vector3(Random.Range(-spawnRange, spawnRange), powerup.transform.position.y, zStart);
             Instantiate(powerup, spawnSpot, powerup.transform.rotation);
         }
