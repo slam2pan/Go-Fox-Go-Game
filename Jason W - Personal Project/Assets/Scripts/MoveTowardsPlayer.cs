@@ -9,7 +9,7 @@ public class MoveTowardsPlayer : MonoBehaviour
     private PlayerController playerControllerScript;
     private GameManager gameManager;
 
-    private float speed = 5;
+    private float speed = 8;
     private float speedUpCond = 500;
     public float bottomBound = -12;
 

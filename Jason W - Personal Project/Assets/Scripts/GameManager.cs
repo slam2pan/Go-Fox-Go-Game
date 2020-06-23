@@ -20,15 +20,11 @@ public class GameManager : MonoBehaviour
     public float zStart = 30;
     private int score = 0;
     private int scoreInc = 1;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    private bool hasGameStarted = false;
 
     public void StartGame()
     {
+        hasGameStarted = true;
         titleScreen.gameObject.SetActive(false);
         scoreText.gameObject.SetActive(true);
         playerControllerScript = GameObject.Find("Player").GetComponentInChildren<PlayerController>();
@@ -85,5 +81,10 @@ public class GameManager : MonoBehaviour
     public int getScore()
     {
         return score;
+    }
+
+    public bool hasTheGameStarted()
+    {
+        return hasGameStarted;
     }
 }

@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody playerRb;
     public Button gameOverButton;
+    [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip crashSound;
+    private AudioSource playerAudio;
 
     private float xRange = 5;
     private float gravityModifier = 2;
@@ -22,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
+        playerAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -61,6 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
         {
+            playerAudio.PlayOneShot(jumpSound, 1.5f);
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnGround = false;
         }
@@ -89,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Object"))
         {
+            playerAudio.PlayOneShot(crashSound);
             gameOver = true;
             gameOverButton.gameObject.SetActive(true);
         }
