@@ -1342,6 +1342,7 @@ MonoBehaviour:
   powerupIndicator: {fileID: 1835538930}
   jumpSound: {fileID: 8300000, guid: f928159802e324af2b95417fa6ce3fdf, type: 3}
   crashSound: {fileID: 8300000, guid: 2a921313c927f45238a0b8baabe3ab12, type: 3}
+  powerupDestroySound: {fileID: 8300000, guid: 7c2de8e149d8346748fb31ed14cc7986, type: 3}
   gameOver: 0
   hasPowerup: 0
 --- !u!65 &1699266286

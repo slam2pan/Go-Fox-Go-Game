@@ -11,8 +11,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject powerupIndicator;
     [SerializeField] AudioClip jumpSound;
     [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip powerupDestroySound;
     private AudioSource playerAudio;
+    Coroutine powerupRoutine = null;
 
+    private float powerupTimer = 0;
     private float xRange = 5;
     private float gravityModifier = 2;
     private float speed = 10;
@@ -20,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool isOnGround = true;
     public bool gameOver = false;
     public bool hasPowerup = false;
+    private bool routineActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +68,7 @@ public class PlayerController : MonoBehaviour
     // Make the player jump
     void PlayerJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
+        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameOver == false)
         {
             playerAudio.PlayOneShot(jumpSound, 1.5f);
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -103,6 +107,7 @@ public class PlayerController : MonoBehaviour
                 gameOverButton.gameObject.SetActive(true);
             } else
             {
+                playerAudio.PlayOneShot(powerupDestroySound);
                 Destroy(collision.gameObject);
             }
         }
@@ -116,15 +121,23 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             hasPowerup = true;
             powerupIndicator.SetActive(true);
-            StartCoroutine(PowerupCountdownRoutine());
+            // stack powerups
+            if (routineActive)
+            {
+                StopCoroutine(powerupRoutine);
+            }
+
+            powerupRoutine = StartCoroutine(PowerupCountdownRoutine());
         }
     }
 
     IEnumerator PowerupCountdownRoutine()
     {
+        routineActive = true;
         yield return new WaitForSeconds(7);
         hasPowerup = false;
         powerupIndicator.SetActive(false);
+        routineActive = false;
     }
 
 }
