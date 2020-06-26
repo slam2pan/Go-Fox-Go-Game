@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        // reset physics
+        Physics.gravity = new Vector3(0, -9.8f, 0);
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
     }
